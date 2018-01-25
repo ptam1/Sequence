@@ -1,17 +1,20 @@
 #include "sequence.h"
+#include <cassert>   //Provides assert function
+#include <iostream>
+using namespace std;
 
+const sequence::size_type sequence::CAPACITY;
 
 sequence::sequence()
 {
 	current_index = 0;
 	used = 0;
-	
 }
 //Postcondiftion: The first item in the sequence becomes the current item
 //(but if the sequence is empty, then there is no current item.
 void sequence::start()
 {
-	current_index = 0;
+	current_index = data[0];	
 }
 
 //Precondition: is_item returns true
@@ -21,11 +24,21 @@ immediately after the original current item.
 */
 void sequence::advance()
 {
-	if(is_item() == true)
+	if(is_item())
 	{
-		current_index++;
-	}
+		if((used == 0) || ((current_index + 1) == 0))
+		{
+			cout << "Can't Advance" << endl;
+			current_index = 0;
+		}
+		else
+		{
+		current_index = current_index + 1;
+		}
 }
+}
+	
+
 
 
 
@@ -39,22 +52,27 @@ void sequence::insert(const value_type& entry)
 {
 	size_type i;
 	
-	if(size() < CAPACITY)
-	{
+	assert(size() < CAPACITY);
+	
 	for(i = used; i > current_index; i--)
 	{
 		data[i] = data[i-1];
 	}
-	data[current_index-1] = entry;
-	used++;
-    }
-	else
+	if(current_index == 0)
 	{
 	data[0] = entry;
 	current_index = 0;
 	used++;	
 	}
+	else
+	{
+	data[current_index-1] = entry;
+	current_index = current_index - 1;
+	used++;
 	}
+	
+}
+	
 
 
 //Precondition: size() < CAPACITY
@@ -67,50 +85,56 @@ void sequence::attach(const value_type& entry)
 {
 	size_type i;
 	
-	if(size() < CAPACITY)
-	{
+	assert(size() < CAPACITY);
 		for(i = used; i > current_index; i--)
 		{
 			data[i] = data[i-1];
 		}
-		data[current_index+1] = entry;
-		used++;
-	}
-	else
+		
+     if(current_index == 0)
 	{
 		data[used] = entry;
 		current_index = used;
 		used++;
 	}
+	else
+	{
+		data[current_index+1] = entry;
+		current_index = current_index+1;
+		used++;
+	}
+	
+   
 }
 
 
 //Precondition: is_item returns true
 /*Postcondition: The current item has been removed from the seuqence,
-and the item after this (if there is one) is not the new current item.
+and the item after this (if there is one) is now the new current item.
 */
 void sequence::remove_current()
 {
 	size_type i;
-	if(is_item() == true)
+ if(is_item())
+ {
 	for(i = 1; i < used; ++i)
 	{
 		data[i-1] = data[i];
 	}
+	used--;
+    current_index = current_index + 1;
+	if(used == 0)
+	{
+	current_index = used;
+	used = 0;
+	}
+}
 }
 
 //Postcondition: The return value is the number of items in the sequence
 sequence::size_type sequence::size() const
 {
-	size_type answer = 0;
-	size_type i;
-	
-	for(i = 0; i < used; ++i)
-	{
-		++answer;
-	}
-	return answer;
-		
+	return used;		
 }
 
 /*Postcondition: A true return value indicates that there is a valid "current" item that
@@ -119,15 +143,22 @@ that there is no valid current item.
 */
 bool sequence::is_item() const
 {
-	if(current_index < used)
-	{
-		return true;
-	}
+ return (current_index < used);
 }
 
 //Precondition: is_item returns true.
 //Postcondition: The item returned is the current item in the sequence.
 sequence::value_type sequence::current() const
 {
-	return data[current_index];
+	if(is_item())
+	{
+		if(used == 0)
+		{
+			cout << "There aren't any numbers in the sequence." << endl;
+		}
+		else
+		{
+	      return data[current_index];
+        }
+}
 }
