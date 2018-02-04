@@ -1,13 +1,11 @@
-//Pui Tam
-//Homework 2
-//CS 5060
+
 
 #ifndef SEQUENCE_H
 #define SEQUENCE_H
-#includes <cstdlib>  //Provides size_t
+#include <cstdlib>  //Provides size_t
 
-namespace std
-{
+using namespace std;
+
 	class sequence
 	{
 	public:
@@ -23,8 +21,9 @@ namespace std
 		void start();
 		void advance();
 		void insert(const value_type& entry);
-		void attatch(const valu_type& entry);
+		void attach(const value_type& entry);
 		void remove_current();
+		void print();
 		
 		//Constant Member Functions
 		size_type size() const;
@@ -36,6 +35,6 @@ namespace std
 		size_type used;
 		size_type current_index;
 	};
-}
+
 
 #endif

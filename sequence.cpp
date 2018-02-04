@@ -5,16 +5,32 @@ using namespace std;
 
 const sequence::size_type sequence::CAPACITY;
 
+void sequence::print()
+{
+	
+	for(size_type i = 0; i < used; i++)
+	{
+		cout << "The array position is:" << " " << i  << "" << data[i] << endl;
+ 	}
+}
+
 sequence::sequence()
 {
-	current_index = 0;
-	used = 0;
+	//current_index = 0;
+	//used = 0;
 }
 //Postcondiftion: The first item in the sequence becomes the current item
 //(but if the sequence is empty, then there is no current item.
 void sequence::start()
 {
+	if(used > 0)
+	{
 	current_index = data[0];	
+	}
+	else
+	{
+		current_index = 0;
+	}
 }
 
 //Precondition: is_item returns true
@@ -24,22 +40,17 @@ immediately after the original current item.
 */
 void sequence::advance()
 {
-	if(is_item())
-	{
-		if((used == 0) || ((current_index + 1) == 0))
+	if((used == 0) || (current_index > used))
 		{
 			cout << "Can't Advance" << endl;
-			current_index = 0;
+			current_index = used;
 		}
-		else
-		{
-		current_index = current_index + 1;
-		}
-}
+	else if(is_item())
+	   {	
+		current_index++;
+       }
 }
 	
-
-
 
 
 //Precondition: size() < CAPACITY
@@ -52,25 +63,21 @@ void sequence::insert(const value_type& entry)
 {
 	size_type i;
 	
-	assert(size() < CAPACITY);
-	
-	for(i = used; i > current_index; i--)
+	if(size() < CAPACITY)
+	{
+	for(i = used; i > current_index; --i)
 	{
 		data[i] = data[i-1];
-	}
-	if(current_index == 0)
-	{
-	data[0] = entry;
-	current_index = 0;
-	used++;	
-	}
-	else
-	{
-	data[current_index-1] = entry;
-	current_index = current_index - 1;
+	}  
+	data[current_index] = entry;
 	used++;
 	}
-	
+else 
+	{
+	current_index = 0;	
+	data[current_index] = entry;
+	used++;	
+	}	
 }
 	
 
@@ -85,27 +92,26 @@ void sequence::attach(const value_type& entry)
 {
 	size_type i;
 	
-	assert(size() < CAPACITY);
-		for(i = used; i > current_index; i--)
+ if(size() < CAPACITY)
+ {
+		for(i = used; i > current_index + 1; --i)
 		{
 			data[i] = data[i-1];
 		}
-		
-     if(current_index == 0)
-	{
-		data[used] = entry;
-		current_index = used;
-		used++;
-	}
-	else
-	{
-		data[current_index+1] = entry;
-		current_index = current_index+1;
-		used++;
-	}
 	
-   
+		used++;
+		current_index++;
+		data[current_index] = entry;		
+ }	
+	
+	else if(current_index == 0)
+	{
+		data[used-1] = entry;
+		current_index = used-1;
+		used++;
+	}
 }
+
 
 
 //Precondition: is_item returns true
@@ -117,18 +123,16 @@ void sequence::remove_current()
 	size_type i;
  if(is_item())
  {
-	for(i = 1; i < used; ++i)
+	for(i = current_index + 1; i < used; ++i)
 	{
 		data[i-1] = data[i];
 	}
 	used--;
-    current_index = current_index + 1;
-	if(used == 0)
+}
+if(used == 0)
 	{
 	current_index = used;
-	used = 0;
 	}
-}
 }
 
 //Postcondition: The return value is the number of items in the sequence
@@ -143,22 +147,26 @@ that there is no valid current item.
 */
 bool sequence::is_item() const
 {
- return (current_index < used);
+ if(current_index < used)
+ {
+	 return true;
+ }
+ else
+ {
+	 return false;
+ }
 }
 
 //Precondition: is_item returns true.
 //Postcondition: The item returned is the current item in the sequence.
 sequence::value_type sequence::current() const
 {
-	if(is_item())
-	{
-		if(used == 0)
-		{
-			cout << "There aren't any numbers in the sequence." << endl;
-		}
-		else
-		{
+	if(is_item() == true)
+	{		
 	      return data[current_index];
-        }
-}
+	}
+	else
+	{
+		cout << "No Current Item" << endl;
+	}
 }
