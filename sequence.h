@@ -1,5 +1,3 @@
-
-
 #ifndef SEQUENCE_H
 #define SEQUENCE_H
 #include <cstdlib>  //Provides size_t
@@ -23,7 +21,6 @@ using namespace std;
 		void insert(const value_type& entry);
 		void attach(const value_type& entry);
 		void remove_current();
-		void print();
 		
 		//Constant Member Functions
 		size_type size() const;
